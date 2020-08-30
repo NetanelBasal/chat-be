@@ -26,7 +26,7 @@ class Users {
 	}
 
 	exists(id) {
-		return this.users.find(value => {
+		return this.users.find((value) => {
 			return value.id === Number(id);
 		});
 	}
@@ -65,7 +65,7 @@ class Rooms {
 		if (!this.users.exists(userId)) {
 			throw Error("User not found");
 		}
-		room.users = room.users.filter(value => {
+		room.users = room.users.filter((value) => {
 			return Number(userId) !== value;
 		});
 	}
@@ -82,18 +82,18 @@ class Rooms {
 
 		room.text.push({
 			text: text,
-			userId: userId
+			userId: userId,
 		});
 	}
 
 	getRooms() {
-		return this.rooms.map(value => {
+		return this.rooms.map((value) => {
 			return { name: value.name, id: value.id };
 		});
 	}
 
 	getRoom(id) {
-		return this.rooms.find(value => {
+		return this.rooms.find((value) => {
 			return value.id === Number(id);
 		});
 	}
@@ -101,18 +101,17 @@ class Rooms {
 const users = new Users();
 const rooms = new Rooms(users);
 
-
 // Add a single user
-const roomId = rooms.add("Chillin around")
-const userId = users.add("Lumigo")
-rooms.addUser(roomId, userId)
-rooms.addText(roomId, userId, "whasup!!")
+const roomId = rooms.add("Chillin around");
+const userId = users.add("MyApp");
+rooms.addUser(roomId, userId);
+rooms.addText(roomId, userId, "whasup!!");
 
 app.post("/users", (req, res, next) => {
 	console.info(`User joined ${inspect(req.body)}`);
 	const userId = users.add(req.body.name);
 	res.json({
-		userId: userId
+		userId: userId,
 	});
 });
 
@@ -128,7 +127,7 @@ app.post("/rooms", (req, res, next) => {
 	console.info(`Adding a room ${inspect(req.body)}`);
 	const roomtId = rooms.add(req.body.name);
 	res.json({
-		roomId: roomtId
+		roomId: roomtId,
 	});
 });
 
@@ -142,7 +141,7 @@ app.get("/rooms/:roomId", (req, res, next) => {
 	res.json({
 		usersCount: room.users.length,
 		textCount: room.text.length,
-		name: room.name
+		name: room.name,
 	});
 });
 
@@ -154,7 +153,7 @@ app.get("/rooms/:roomId/users", (req, res, next) => {
 	}
 
 	res.json({
-		users: room.users
+		users: room.users,
 	});
 });
 
@@ -181,7 +180,7 @@ app.delete("/rooms/:roomId/users/:userId", (req, res, next) => {
 app.get("/rooms/:roomId/text", (req, res, next) => {
 	const room = rooms.getRoom(req.params.roomId, res);
 	if (room) {
-		res.json({text: room.text});
+		res.json({ text: room.text });
 	} else {
 		res.status(404).send("Room not found");
 	}
